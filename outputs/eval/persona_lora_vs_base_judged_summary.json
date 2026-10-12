@@ -1,0 +1,214 @@
+{
+  "style_winner": {
+    "treatment": "smollm2-360m-instruct-lora-dpo",
+    "baseline": "smollm2-360m-instruct",
+    "criterion": "style_winner",
+    "judge_model": "google/gemini-3.6-flash",
+    "overall": {
+      "n_pairs": 40,
+      "wins": 18,
+      "losses": 1,
+      "ties": 21,
+      "unknown": 0,
+      "failures": 0,
+      "pending": 0,
+      "win_rate_excl_ties": 0.9473684210526315,
+      "win_rate_excl_ties_ci95": [
+        0.7536078466345479,
+        0.99064824750947
+      ],
+      "win_rate_ties_half": 0.7125,
+      "win_share_all": 0.45,
+      "tie_rate": 0.525,
+      "unknown_rate": 0.0,
+      "failure_rate": 0.0
+    },
+    "per_category": {
+      "coding": {
+        "n_pairs": 10,
+        "wins": 5,
+        "losses": 0,
+        "ties": 5,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 1.0,
+        "win_rate_excl_ties_ci95": [
+          0.5655085052479191,
+          1.0
+        ],
+        "win_rate_ties_half": 0.75,
+        "win_share_all": 0.5,
+        "tie_rate": 0.5,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "cooking": {
+        "n_pairs": 10,
+        "wins": 5,
+        "losses": 0,
+        "ties": 5,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 1.0,
+        "win_rate_excl_ties_ci95": [
+          0.5655085052479191,
+          1.0
+        ],
+        "win_rate_ties_half": 0.75,
+        "win_share_all": 0.5,
+        "tie_rate": 0.5,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "general_help": {
+        "n_pairs": 10,
+        "wins": 4,
+        "losses": 0,
+        "ties": 6,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 1.0,
+        "win_rate_excl_ties_ci95": [
+          0.5100999795960008,
+          1.0
+        ],
+        "win_rate_ties_half": 0.7,
+        "win_share_all": 0.4,
+        "tie_rate": 0.6,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "safety_sensitive": {
+        "n_pairs": 10,
+        "wins": 4,
+        "losses": 1,
+        "ties": 5,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.8,
+        "win_rate_excl_ties_ci95": [
+          0.3755282641185388,
+          0.9637768390302125
+        ],
+        "win_rate_ties_half": 0.65,
+        "win_share_all": 0.4,
+        "tie_rate": 0.5,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      }
+    },
+    "attempts_histogram": {
+      "1": 40
+    }
+  },
+  "quality_winner": {
+    "treatment": "smollm2-360m-instruct-lora-dpo",
+    "baseline": "smollm2-360m-instruct",
+    "criterion": "quality_winner",
+    "judge_model": "google/gemini-3.6-flash",
+    "overall": {
+      "n_pairs": 40,
+      "wins": 13,
+      "losses": 24,
+      "ties": 3,
+      "unknown": 0,
+      "failures": 0,
+      "pending": 0,
+      "win_rate_excl_ties": 0.35135135135135137,
+      "win_rate_excl_ties_ci95": [
+        0.2182540663110087,
+        0.5124127048243043
+      ],
+      "win_rate_ties_half": 0.3625,
+      "win_share_all": 0.325,
+      "tie_rate": 0.075,
+      "unknown_rate": 0.0,
+      "failure_rate": 0.0
+    },
+    "per_category": {
+      "coding": {
+        "n_pairs": 10,
+        "wins": 3,
+        "losses": 6,
+        "ties": 1,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.3333333333333333,
+        "win_rate_excl_ties_ci95": [
+          0.12058159868274293,
+          0.6458026525009102
+        ],
+        "win_rate_ties_half": 0.35,
+        "win_share_all": 0.3,
+        "tie_rate": 0.1,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "cooking": {
+        "n_pairs": 10,
+        "wins": 2,
+        "losses": 8,
+        "ties": 0,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.2,
+        "win_rate_excl_ties_ci95": [
+          0.056680947980693314,
+          0.5098431532792765
+        ],
+        "win_rate_ties_half": 0.2,
+        "win_share_all": 0.2,
+        "tie_rate": 0.0,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "general_help": {
+        "n_pairs": 10,
+        "wins": 3,
+        "losses": 6,
+        "ties": 1,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.3333333333333333,
+        "win_rate_excl_ties_ci95": [
+          0.12058159868274293,
+          0.6458026525009102
+        ],
+        "win_rate_ties_half": 0.35,
+        "win_share_all": 0.3,
+        "tie_rate": 0.1,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "safety_sensitive": {
+        "n_pairs": 10,
+        "wins": 5,
+        "losses": 4,
+        "ties": 1,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.5555555555555556,
+        "win_rate_excl_ties_ci95": [
+          0.2666473457440297,
+          0.811224570528086
+        ],
+        "win_rate_ties_half": 0.55,
+        "win_share_all": 0.5,
+        "tie_rate": 0.1,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      }
+    },
+    "attempts_histogram": {
+      "1": 40
+    }
+  }
+}

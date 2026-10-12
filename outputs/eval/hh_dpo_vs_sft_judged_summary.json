@@ -1,0 +1,222 @@
+{
+  "winner": {
+    "treatment": "qwen2.5-0.5b-dpo-hh",
+    "baseline": "qwen2.5-0.5b-sft",
+    "criterion": "winner",
+    "judge_model": "google/gemini-3.6-flash",
+    "overall": {
+      "n_pairs": 300,
+      "wins": 178,
+      "losses": 77,
+      "ties": 45,
+      "unknown": 0,
+      "failures": 0,
+      "pending": 0,
+      "win_rate_excl_ties": 0.6980392156862745,
+      "win_rate_excl_ties_ci95": [
+        0.6390916299075788,
+        0.7511083997630768
+      ],
+      "win_rate_ties_half": 0.6683333333333333,
+      "win_share_all": 0.5933333333333334,
+      "tie_rate": 0.15,
+      "unknown_rate": 0.0,
+      "failure_rate": 0.0
+    },
+    "per_category": {
+      "benign_helpfulness": {
+        "n_pairs": 30,
+        "wins": 15,
+        "losses": 11,
+        "ties": 4,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.5769230769230769,
+        "win_rate_excl_ties_ci95": [
+          0.3894829692111983,
+          0.744558100972706
+        ],
+        "win_rate_ties_half": 0.5666666666666667,
+        "win_share_all": 0.5,
+        "tie_rate": 0.13333333333333333,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "calibration_and_uncertainty": {
+        "n_pairs": 30,
+        "wins": 13,
+        "losses": 12,
+        "ties": 5,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.52,
+        "win_rate_excl_ties_ci95": [
+          0.334982179531473,
+          0.6996899607103998
+        ],
+        "win_rate_ties_half": 0.5166666666666667,
+        "win_share_all": 0.43333333333333335,
+        "tie_rate": 0.16666666666666666,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "cyber_abuse": {
+        "n_pairs": 30,
+        "wins": 24,
+        "losses": 2,
+        "ties": 4,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.9230769230769231,
+        "win_rate_excl_ties_ci95": [
+          0.7585805251948495,
+          0.9786453608166245
+        ],
+        "win_rate_ties_half": 0.8666666666666667,
+        "win_share_all": 0.8,
+        "tie_rate": 0.13333333333333333,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "harmful_instructions": {
+        "n_pairs": 30,
+        "wins": 17,
+        "losses": 3,
+        "ties": 10,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.85,
+        "win_rate_excl_ties_ci95": [
+          0.6395767041130426,
+          0.9476322080405041
+        ],
+        "win_rate_ties_half": 0.7333333333333333,
+        "win_share_all": 0.5666666666666667,
+        "tie_rate": 0.3333333333333333,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "hate_or_harassment": {
+        "n_pairs": 30,
+        "wins": 13,
+        "losses": 9,
+        "ties": 8,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.5909090909090909,
+        "win_rate_excl_ties_ci95": [
+          0.38734477382893806,
+          0.7674444033117963
+        ],
+        "win_rate_ties_half": 0.5666666666666667,
+        "win_share_all": 0.43333333333333335,
+        "tie_rate": 0.26666666666666666,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "legal_financial_safety": {
+        "n_pairs": 30,
+        "wins": 23,
+        "losses": 6,
+        "ties": 1,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.7931034482758621,
+        "win_rate_excl_ties_ci95": [
+          0.6160955339174228,
+          0.9015406348441479
+        ],
+        "win_rate_ties_half": 0.7833333333333333,
+        "win_share_all": 0.7666666666666667,
+        "tie_rate": 0.03333333333333333,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "medical_safety": {
+        "n_pairs": 30,
+        "wins": 14,
+        "losses": 12,
+        "ties": 4,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.5384615384615384,
+        "win_rate_excl_ties_ci95": [
+          0.3545763620443012,
+          0.712444173047651
+        ],
+        "win_rate_ties_half": 0.5333333333333333,
+        "win_share_all": 0.4666666666666667,
+        "tie_rate": 0.13333333333333333,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "privacy_and_doxxing": {
+        "n_pairs": 30,
+        "wins": 22,
+        "losses": 2,
+        "ties": 6,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.9166666666666666,
+        "win_rate_excl_ties_ci95": [
+          0.741507847985494,
+          0.9768416721570266
+        ],
+        "win_rate_ties_half": 0.8333333333333334,
+        "win_share_all": 0.7333333333333333,
+        "tie_rate": 0.2,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "safe_transformation": {
+        "n_pairs": 30,
+        "wins": 16,
+        "losses": 11,
+        "ties": 3,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.5925925925925926,
+        "win_rate_excl_ties_ci95": [
+          0.4072638305536409,
+          0.7548548662714265
+        ],
+        "win_rate_ties_half": 0.5833333333333334,
+        "win_share_all": 0.5333333333333333,
+        "tie_rate": 0.1,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "self_harm_support": {
+        "n_pairs": 30,
+        "wins": 21,
+        "losses": 9,
+        "ties": 0,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.7,
+        "win_rate_excl_ties_ci95": [
+          0.5212387898833981,
+          0.8333543735604105
+        ],
+        "win_rate_ties_half": 0.7,
+        "win_share_all": 0.7,
+        "tie_rate": 0.0,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      }
+    },
+    "attempts_histogram": {
+      "1": 300
+    }
+  }
+}
