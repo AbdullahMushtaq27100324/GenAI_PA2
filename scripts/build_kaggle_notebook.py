@@ -20,7 +20,7 @@ md(r"""
 Training and generation run locally (see `notebooks/PA2_local_pipeline.ipynb`). This notebook covers the two parts that need Kaggle:
 
 - **Part A (Task 1):** run with **Accelerator = GPU T4 x2**. Clones the repo, installs dependencies without reinstalling PyTorch, confirms two T4s, prints versions, and runs the adapter tests.
-- **Part B (Task 7):** run as a notebook with **Kaggle Benchmarks / model access enabled**, so `kaggle_benchmarks` can call `google/gemini-3.6-flash`. It judges the saved pairwise JSONL files only; nothing is regenerated here.
+- **Part B (Task 7):** run inside a **Kaggle Benchmarks task notebook** (Kaggle Benchmarks → "Create task"; requires a phone-verified account). Only task notebooks have `kaggle_benchmarks` and free model access to `google/gemini-3.6-flash`. Paste this notebook's cells in, set `RUN_PART_A_SETUP = False`, and run. It judges the saved pairwise JSONL files only; nothing is regenerated here.
   - Batching: 5 pairs per request, at least 5 s sleep between attempts, up to 3 retries.
   - Durability: checkpoints after each batch and keeps a failure log.
   - Resume: rerunning skips pairs already judged.
@@ -105,20 +105,24 @@ if RUN_PART_B_JUDGING:
     print(sorted(p.name for p in JUDGE_DIR.iterdir()))
 """)
 code(r"""
+# Judging runs in this kernel (not a subprocess) so it uses the task notebook's model-proxy credentials directly.
+from alignment.judge import run_judging
+from alignment.pairwise import summarize_judgments
+from alignment.utils import write_json
+
 RUBRICS = {"uf_dpo_vs_sft": "general", "hh_dpo_vs_sft": "safety", "persona_lora_vs_base": "persona"}
 if RUN_PART_B_JUDGING:
     for name, rubric in RUBRICS.items():
         pairs = JUDGE_DIR / f"{name}_pairs.jsonl"
         if not pairs.exists():
             print("missing", pairs); continue
-        sleep = "0" if JUDGE_MODEL == "mock" else "5"
-        cmd = [sys.executable, "scripts/judge_pairwise_kaggle.py", "--pairs_path", str(pairs),
-               "--output_path", str(JUDGE_DIR / f"{name}_judged.jsonl"), "--judge_model", JUDGE_MODEL,
-               "--rubric", rubric, "--batch_size", "5", "--sleep_seconds", sleep, "--max_retries", "3", "--reuse_judgments"]
-        print(" ".join(cmd))
-        res = subprocess.run(cmd, capture_output=True, text=True, env={**os.environ, "PYTHONPATH": str(REPO)})
-        print(res.stdout[-4000:], res.stderr[-2000:])
-        assert res.returncode == 0, f"judging {name} failed"
+        judged = JUDGE_DIR / f"{name}_judged.jsonl"
+        result = run_judging(pairs, judged, JUDGE_MODEL, rubric, batch_size=5,
+                             sleep_seconds=0 if JUDGE_MODEL == "mock" else 5, max_retries=3, reuse_judgments=True)
+        criteria = ["style_winner", "quality_winner"] if rubric == "persona" else ["winner"]
+        summary = {c: summarize_judgments(pairs, judged, result["failures_path"], c) for c in criteria}
+        write_json(JUDGE_DIR / f"{name}_judged_summary.json", summary)
+        print(name, result, json.dumps({c: v["overall"] for c, v in summary.items()}, indent=1))
 """)
 code(r"""
 if RUN_PART_B_JUDGING:
