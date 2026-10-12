@@ -31,7 +31,9 @@ Everything is written under `/kaggle/working`. Save a notebook version when it f
 code(r"""
 RUN_PART_A_SETUP = True      # Task 1 (needs GPU T4 x2)
 RUN_PART_B_JUDGING = True    # Task 7 (needs Kaggle model access)
-REPO_URL = "https://github.com/<your-username>/<your-repo>.git"   # <-- set this (private repo: use a token URL or attach as dataset)
+REPO_URL = "https://github.com/<your-username>/<your-repo>.git"   # <-- set this
+# Private repo: add a GitHub token (read-only "Contents" access to this repo) as a Kaggle secret named
+# GITHUB_TOKEN via Add-ons -> Secrets. It is read at runtime and never written into the notebook.
 JUDGE_MODEL = "google/gemini-3.6-flash"
 PREVIOUS_JUDGMENTS = None    # e.g. "/kaggle/input/pa2-judge-v1/judgments" to resume from an earlier version
 """, tags=["parameters"])
@@ -42,7 +44,15 @@ from pathlib import Path
 WORK = Path("/kaggle/working")
 REPO = WORK / "pa2"
 if not REPO.exists():
-    subprocess.run(["git", "clone", "--depth", "1", REPO_URL, str(REPO)], check=True)
+    url = REPO_URL
+    try:
+        from kaggle_secrets import UserSecretsClient
+        token = UserSecretsClient().get_secret("GITHUB_TOKEN")
+        url = REPO_URL.replace("https://", f"https://x-access-token:{token}@")
+    except Exception:
+        print("no GITHUB_TOKEN secret - cloning without credentials (works for public repos only)")
+    res = subprocess.run(["git", "clone", "--depth", "1", url, str(REPO)], capture_output=True, text=True)
+    assert res.returncode == 0, "git clone failed (check REPO_URL and the GITHUB_TOKEN secret)"
 os.chdir(REPO)
 sys.path.insert(0, str(REPO))
 print("repo at", REPO, "| commit", subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip())
