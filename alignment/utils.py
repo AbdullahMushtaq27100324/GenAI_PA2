@@ -8,11 +8,14 @@ import random
 from pathlib import Path
 from typing import Any, Iterable
 
-import numpy as np
-import torch
+# numpy / torch are imported inside the functions that need them, so the judging code
+# (pairwise.py, judge.py) runs in environments without them, e.g. Kaggle benchmark task notebooks.
 
 
 def set_seed(seed: int) -> None:
+    import numpy as np
+    import torch
+
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -82,6 +85,8 @@ def read_jsonl(path: str | Path) -> list[dict]:
 
 
 def gpu_memory_gb() -> dict[str, float]:
+    import torch
+
     if not torch.cuda.is_available():
         return {}
     return {
@@ -93,6 +98,8 @@ def gpu_memory_gb() -> dict[str, float]:
 
 def free_cuda() -> None:
     import gc
+
+    import torch
 
     gc.collect()
     if torch.cuda.is_available():
