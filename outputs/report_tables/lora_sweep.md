@@ -1,6 +1,6 @@
 | config | val_degenerate_rate | val_hit_max_rate | val_exclaims_per_output | val_mean_words | lora_r | lora_alpha | lr | eval_reward_acc | eval_margin | eval_loss | trainable_params | steps |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| base (no adapter) | 0.0 | 0.0 | 0.45 | 82.4 | nan | nan | - | nan | nan | nan | nan | nan |
+| base (no adapter) | 0.0 | 0.0 | 0.45 | 82.4 | - | - | - | - | - | - | - | - |
 | r16_lr5e-5 | 0.0 | 0.0 | 1.75 | 89.75 | 16.0 | 32.0 | 5e-05 | 1.0 | 1.9204 | 0.1556 | 8683520.0 | 65.0 |
 | r16_lr1e-4 | 0.0 | 0.0 | 6.25 | 67.0 | 16.0 | 32.0 | 1e-04 | 1.0 | 4.4174 | 0.0206 | 8683520.0 | 65.0 |
 | r16_lr2e-4 | 0.95 | 0.95 | 56.95 | 311.55 | 16.0 | 32.0 | 2e-04 | 1.0 | 7.8701 | 0.0016 | 8683520.0 | 65.0 |
