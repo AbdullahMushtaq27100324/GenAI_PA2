@@ -267,3 +267,16 @@ def test_hf_right_padding_does_not_change_scores(tiny_qwen):
         naive = torch.tensor([naive_logprob(tiny_qwen, tok, p, r, 64) for p, r in zip(prompts, responses)])
     torch.testing.assert_close(batched, single, rtol=1e-5, atol=1e-5)
     torch.testing.assert_close(batched, naive, rtol=1e-5, atol=1e-5)
+
+
+@pytest.mark.skipif(not torch.cuda.is_available(), reason="CUDA atomics are the source of the non-determinism")
+def test_scoring_is_bitwise_deterministic_on_gpu(tiny_qwen):
+    # Identical policy and reference must give exactly equal log-probs, so step-0 reward accuracy is exactly 0.
+    tok = ToyTokenizer()
+    model = tiny_qwen.cuda()
+    prompts, responses = ["Q: "] * 8, ["an answer of some length " * (i + 1) for i in range(8)]
+    with torch.no_grad():
+        first = adapter.compute_response_logprobs(model, tok, prompts, responses, max_length=200)
+        second = adapter.compute_response_logprobs(model, tok, prompts, responses, max_length=200)
+    tiny_qwen.cpu()
+    assert torch.equal(first, second)

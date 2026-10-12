@@ -130,11 +130,21 @@ def pick_examples(pairs_path, judged_path, criterion="winner", n_each=2, max_cha
     return "\n".join(lines)
 
 
+_REPO_ROOT = str(Path(__file__).resolve().parents[1]) + "/"
+
+
 def df_to_markdown(df: pd.DataFrame) -> str:
+    """Markdown table; absolute repo paths are shown relative to the repo root, and missing values as '-'."""
     if df.empty:
         return "_(no rows)_"
     cols = list(df.columns)
     out = ["| " + " | ".join(map(str, cols)) + " |", "|" + "---|" * len(cols)]
+
+    def cell(v):
+        if v is None or (isinstance(v, float) and v != v):
+            return "-"
+        return str(v).replace(_REPO_ROOT, "").replace("|", "\\|")
+
     for _, row in df.iterrows():
-        out.append("| " + " | ".join(str(row[c]).replace("|", "\\|") for c in cols) + " |")
+        out.append("| " + " | ".join(cell(row[c]) for c in cols) + " |")
     return "\n".join(out)

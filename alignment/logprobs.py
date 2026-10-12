@@ -42,9 +42,12 @@ def _shifted_mask(labels: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
 
 
 def _rows_sum(token_logps: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
-    rows = mask.nonzero(as_tuple=True)[0]
-    out = torch.zeros(mask.shape[0], dtype=token_logps.dtype, device=token_logps.device)
-    return out.index_add(0, rows, token_logps)
+    # Scatter back to [B, T-1] and reduce per row. Deliberately not index_add: on CUDA it uses atomic adds whose
+    # order varies between calls, so the same model scored twice would give slightly different sums and a strict
+    # r_w > r_l comparison of identical policy/reference models would not be exactly 0.
+    full = torch.zeros(mask.shape, dtype=token_logps.dtype, device=token_logps.device)
+    full = full.masked_scatter(mask, token_logps)
+    return full.sum(dim=1)
 
 
 def logprobs_from_logits(logits: torch.Tensor, labels: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:

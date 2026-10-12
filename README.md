@@ -21,6 +21,8 @@ Built on the course starter repository (`ahmad903501/small-model-alignment-start
 | `scripts/judge_pairwise_kaggle.py` | Judge CLI (manual §13.2) |
 | `notebooks/PA2_local_pipeline.ipynb` | **Driver notebook for every experiment** (`DRY_RUN` toggle) |
 | `notebooks/kaggle_setup_and_judge.ipynb` | Task 1 Kaggle T4×2 check and Task 7 judging |
+| `notebooks/kaggle_*_executed.ipynb` | The executed Kaggle runs (Task 1 evidence, judging log) |
+| `notebooks/results_summary.ipynb` | **Read this first:** every result, plot and discussion |
 | `eval_sets/` | Fixed evaluation sets: HH (given), AlpacaEval 300 / seed 42, persona style set |
 | `data/processed/*.ids.json` | Exact IDs of every train/val subset used |
 | `outputs/` | Metrics, plots, configs, generations, pair files, judgments, report tables |
@@ -46,7 +48,8 @@ bash scripts/run_pipeline.sh full   # full experiments -> outputs/
 The runs are crash-safe. Every stage is idempotent, training resumes from `<run>/last/` (written atomically), and generation and judging resume from partial files. If the run is interrupted, re-run the same command. Downstream stages always use each run's `best/` checkpoint:
 - SFT: lowest validation loss
 - DPO: highest validation reward accuracy
-- LoRA: highest eval reward accuracy
+- LoRA: within a run, lowest validation DPO loss; across the sweep, the largest validation reward margin among
+  configs whose generations on the 20 validation prompts are at most 5% degenerate (lowest-loss runs over-optimize)
 
 Judging runs on Kaggle (`notebooks/kaggle_setup_and_judge.ipynb`), or locally after `kaggle b init -y` by setting `RUN_JUDGE_LOCALLY=True`.
 
