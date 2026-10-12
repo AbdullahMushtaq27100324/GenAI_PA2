@@ -41,7 +41,9 @@ PREVIOUS_JUDGMENTS = None    # e.g. "/kaggle/input/pa2-judge-v1/judgments" to re
 code(r"""
 import os, sys, json, shutil, subprocess, zipfile
 from pathlib import Path
-WORK = Path("/kaggle/working")
+# On Kaggle everything goes to /kaggle/working. Elsewhere (local test runs) use PA2_KAGGLE_WORK or a temp dir.
+WORK = Path("/kaggle/working") if Path("/kaggle/working").exists() else Path(os.environ.get("PA2_KAGGLE_WORK", "/tmp/pa2_kaggle_work"))
+WORK.mkdir(parents=True, exist_ok=True)
 REPO = WORK / "pa2"
 if not REPO.exists():
     url = REPO_URL
@@ -88,8 +90,10 @@ Pair files are read from `outputs/eval/*_pairs.jsonl` in the repo. They are comm
 """)
 code(r"""
 if RUN_PART_B_JUDGING:
-    import kaggle_benchmarks as kbench
-    print("available judge models:", sorted(kbench.llms)[:50])
+    if JUDGE_MODEL != "mock":  # "mock" = offline fake judge, only for testing this notebook outside Kaggle
+        import kaggle_benchmarks as kbench
+        print("available judge models:", sorted(kbench.llms)[:50])
+        assert kbench.llms, "kaggle_benchmarks has no models: enable Kaggle model access for this notebook"
     JUDGE_DIR = WORK / "judgments"
     JUDGE_DIR.mkdir(exist_ok=True)
     pair_sources = list((REPO / "outputs" / "eval").glob("*_pairs.jsonl")) or list(Path("/kaggle/input").rglob("*_pairs.jsonl"))
@@ -107,12 +111,14 @@ if RUN_PART_B_JUDGING:
         pairs = JUDGE_DIR / f"{name}_pairs.jsonl"
         if not pairs.exists():
             print("missing", pairs); continue
+        sleep = "0" if JUDGE_MODEL == "mock" else "5"
         cmd = [sys.executable, "scripts/judge_pairwise_kaggle.py", "--pairs_path", str(pairs),
                "--output_path", str(JUDGE_DIR / f"{name}_judged.jsonl"), "--judge_model", JUDGE_MODEL,
-               "--rubric", rubric, "--batch_size", "5", "--sleep_seconds", "5", "--max_retries", "3", "--reuse_judgments"]
+               "--rubric", rubric, "--batch_size", "5", "--sleep_seconds", sleep, "--max_retries", "3", "--reuse_judgments"]
         print(" ".join(cmd))
         res = subprocess.run(cmd, capture_output=True, text=True, env={**os.environ, "PYTHONPATH": str(REPO)})
         print(res.stdout[-4000:], res.stderr[-2000:])
+        assert res.returncode == 0, f"judging {name} failed"
 """)
 code(r"""
 if RUN_PART_B_JUDGING:
@@ -125,4 +131,4 @@ if RUN_PART_B_JUDGING:
 """)
 
 if __name__ == "__main__":
-    nbb.build(Path(__file__).resolve().parents[1] / "notebooks" / "kaggle_setup_and_judge.ipynb")
+    nbb.build(Path(__file__).resolve().parents[1] / "notebooks" / "kaggle_setup_and_judge.ipynb", kernel=("python3", "Python 3"))

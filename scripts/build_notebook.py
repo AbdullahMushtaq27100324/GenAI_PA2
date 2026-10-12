@@ -579,7 +579,7 @@ print("tables :", sorted(p.name for p in TABLES.glob("*.md")))
 """)
 
 
-def build(path: Path) -> None:
+def build(path: Path, kernel: tuple[str, str] = ("ml", "ML (.venv)")) -> None:
     cells = []
     for kind, src, tags in CELLS:
         lines = src.splitlines(keepends=True)
@@ -590,7 +590,7 @@ def build(path: Path) -> None:
     nb = {
         "cells": cells,
         "metadata": {
-            "kernelspec": {"display_name": "ML (.venv)", "language": "python", "name": "ml"},
+            "kernelspec": {"display_name": kernel[1], "language": "python", "name": kernel[0]},
             "language_info": {"name": "python"},
         },
         "nbformat": 4,
