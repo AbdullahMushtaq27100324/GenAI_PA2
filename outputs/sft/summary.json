@@ -1,0 +1,11 @@
+{
+  "status": "done",
+  "total_steps": 938,
+  "best_step": 938,
+  "best_val_loss": 1.3557164914284405,
+  "train_hours": 1.437,
+  "train_examples": 30000,
+  "val_examples": 1000,
+  "warmup_steps": 29,
+  "effective_batch": 32
+}

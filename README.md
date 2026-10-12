@@ -1,76 +1,59 @@
-# Small-Model Alignment Starter
+# Small-Model Alignment: SFT + DPO on Qwen2.5-0.5B
 
-This branch is the student starter package for the SFT + DPO alignment assignment. It is intentionally minimal: it provides the tested environment metadata, assignment PDF, fixed evaluation/data files, and no completed training implementation.
+Supervised fine-tuning and two **from-scratch** DPO runs (HH-RLHF, UltraFeedback) on `Qwen/Qwen2.5-0.5B`, plus a TRL `DPOTrainer` + LoRA persona run on `HuggingFaceTB/SmolLM2-360M-Instruct`. Models are evaluated with blinded pairwise judgments from a Kaggle model-proxy judge.
 
-## What Is Included
+Built on the course starter repository (`ahmad903501/small-model-alignment-starter`).
 
-```text
-requirements.txt
-pyproject.toml
-submission_adapter.py
-tests/test_public_adapter_smoke.py
-tests/toy_lm.py
-docs/assignment_manual.pdf
-data/persona_lora/ramsay_style_preferences.json
-data/persona_lora/README.md
-eval_sets/hh_rlhf_eval_300_seed42.json
-```
+## Where things are
 
-## Recommended Kaggle Setup
+| Path | Contents |
+|---|---|
+| `submission_adapter.py` | Grading interface: thin wrappers around `alignment/` |
+| `alignment/batching.py` | Prompt/response tokenization, EOS-then-truncate, `-100` masks, right padding |
+| `alignment/logprobs.py` | Response-only summed log-probabilities (fp32), including a memory-saving HF path |
+| `alignment/losses.py` | SFT loss (token-mean reduction) and DPO loss/rewards |
+| `alignment/train_sft.py` | From-scratch SFT loop (no HF `Trainer`) |
+| `alignment/train_dpo.py` | From-scratch DPO loop, shared by both preference datasets |
+| `alignment/train_lora_dpo.py` | TRL `DPOTrainer` + PEFT LoRA (persona task only) |
+| `alignment/data.py` | Dataset download, filtering, and seed-42 subsets |
+| `alignment/generate.py` | Batched greedy generation, resumable |
+| `alignment/pairwise.py`, `alignment/judge.py` | Blinded A/B pair files, resumable batched judging, summaries |
+| `scripts/judge_pairwise_kaggle.py` | Judge CLI (manual §13.2) |
+| `notebooks/PA2_local_pipeline.ipynb` | **Driver notebook for every experiment** (`DRY_RUN` toggle) |
+| `notebooks/kaggle_setup_and_judge.ipynb` | Task 1 Kaggle T4×2 check and Task 7 judging |
+| `eval_sets/` | Fixed evaluation sets: HH (given), AlpacaEval 300 / seed 42, persona style set |
+| `data/processed/*.ids.json` | Exact IDs of every train/val subset used |
+| `outputs/` | Metrics, plots, configs, generations, pair files, judgments, report tables |
 
-Use a Kaggle notebook with the `GPU T4 x2` accelerator. After cloning this repository/branch, run:
-
-```bash
-python -m pip uninstall -y -q torchao || true
-python -m pip install -q "transformers>=4.43.0,<5" "datasets>=2.18,<5" huggingface_hub accelerate tqdm pyyaml sentencepiece safetensors pytest
-python -m pip install -q -e . --no-deps
-```
-
-This keeps Kaggle's preinstalled CUDA-compatible PyTorch intact, avoids known stale `torchao` / PEFT conflicts, and makes the local repository importable without replacing the GPU stack.
-
-## What You Need To Build
-
-You will add your own training and evaluation code on top of this starter. At minimum, your project should implement:
-
-- SFT training on 30,000 examples.
-- From-scratch DPO on HH-RLHF-style preference data.
-- From-scratch DPO on UltraFeedback-style preference data.
-- TRL `DPOTrainer` + LoRA training on the provided persona preference data.
-- Generation and DPO-vs-SFT evaluation outputs.
-- A short final report with plots and analysis.
-
-Read `docs/assignment_manual.pdf` for the full requirements and suggested workflow.
-
-## Submission Adapter And Public Tests
-
-Keep the six function signatures in `submission_adapter.py` unchanged. Implement
-each function as a small wrapper around your own SFT/DPO code. The grader uses
-this stable interface so your internal file and class organization can remain
-your choice.
-
-Run the public tests from the repository root:
+## Setup (local)
 
 ```bash
-python -m pip install -q pytest
+python3 -m venv .venv && source .venv/bin/activate
+pip install torch            # any CUDA build; not pinned
+pip install -r requirements.txt papermill ipykernel
+pip install -e . --no-deps
+python -m ipykernel install --user --name pa2 --display-name "PA2 (.venv)"
+PYTHONPATH=. python -m pytest -q tests/
+```
+
+## Running
+
+```bash
+bash scripts/run_pipeline.sh dry    # every stage end to end with tiny sizes -> outputs_dryrun/
+bash scripts/run_pipeline.sh full   # full experiments -> outputs/
+```
+
+The runs are crash-safe. Every stage is idempotent, training resumes from `<run>/last/` (written atomically), and generation and judging resume from partial files. If the run is interrupted, re-run the same command. Downstream stages always use each run's `best/` checkpoint:
+- SFT: lowest validation loss
+- DPO: highest validation reward accuracy
+- LoRA: highest eval reward accuracy
+
+Judging runs on Kaggle (`notebooks/kaggle_setup_and_judge.ipynb`), or locally after `kaggle b init -y` by setting `RUN_JUDGE_LOCALLY=True`.
+
+## Public adapter tests
+
+```bash
 PYTHONPATH=. python -m pytest -q tests/test_public_adapter_smoke.py
 ```
 
-The tests use a tiny local tokenizer and model, so they do not download a model,
-load the assignment datasets, or require a GPU. The starter adapter raises
-`NotImplementedError` until you connect it to your implementation. Passing the
-public tests checks the interface and a few basic invariants; the private grader
-also checks numerical correctness and harder edge cases described in the manual.
-
-For `compute_sft_loss`, the assignment accepts either the mean of per-example
-summed response negative log probabilities or the mean over all unmasked response
-tokens. Use one reduction consistently and document it in the report.
-
-## Fixed Files
-
-- `eval_sets/hh_rlhf_eval_300_seed42.json` is the fixed synthetic helpful/harmless evaluation set.
-- For AlpacaEval-style evaluation, use 300 prompts with seed `42` so comparisons are consistent.
-- `data/persona_lora/ramsay_style_preferences.json` is the small preference dataset for the LoRA-DPO persona task.
-
-## Saving Work On Kaggle
-
-Kaggle sessions are temporary. Write important outputs under `/kaggle/working`, save notebook versions, and archive checkpoints/generations as zip files or Kaggle output datasets before ending a session.
+`compute_sft_loss` uses the **mean over all unmasked response tokens** reduction.

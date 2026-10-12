@@ -1,0 +1,12 @@
+{
+  "model_path": "HuggingFaceTB/SmolLM2-360M-Instruct",
+  "adapter_path": "/home/abdullah/ML_Research/Advanced GenAI/PA2/outputs/lora/r16_lr1e-4/best_adapter",
+  "generator": "smollm2-360m-instruct-lora-dpo",
+  "max_new_tokens": 512,
+  "batch_size": 16,
+  "do_sample": false,
+  "repetition_penalty": 1.1,
+  "no_repeat_ngram_size": 0,
+  "dtype": "bf16",
+  "prompt_style": "chat_template"
+}

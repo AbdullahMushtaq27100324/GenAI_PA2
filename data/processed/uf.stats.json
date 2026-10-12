@@ -1,0 +1,8 @@
+{
+  "source": "HuggingFaceH4/ultrafeedback_binarized train_prefs / test_prefs, score_chosen > score_rejected",
+  "pool_train": 53344,
+  "pool_val": 1715,
+  "train": 15000,
+  "val": 1000,
+  "seed": 42
+}

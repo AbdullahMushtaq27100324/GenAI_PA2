@@ -1,2 +1,23 @@
 __pycache__/
 *.py[cod]
+.venv
+.ipynb_checkpoints/
+.env
+# large training artifacts (metrics, plots, configs, generations and judgments are kept)
+outputs*/**/last/
+outputs*/**/last.tmp/
+outputs*/**/last.old/
+outputs*/**/best/
+outputs*/**/final/
+outputs*/**/*.tmp/
+outputs*/**/checkpoint-*/
+outputs*/**/ref_*_logps.pt
+outputs_dryrun/
+data/processed/*.jsonl
+!data/processed/*.ids.json
+*.zip
+logs/
+outputs*/**/trainer/
+# LoRA adapters: keep only the submitted one (outputs/lora/selection.json)
+outputs*/**/best_adapter/
+!outputs/lora/r16_lr1e-4/best_adapter/

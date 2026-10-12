@@ -1,0 +1,7 @@
+{
+  "qwen_loop_rate_rp1.0": 0.041666666666666664,
+  "smol_loop_rate_rp1.0": 0.25,
+  "qwen_repetition_penalty": 1.0,
+  "smol_repetition_penalty": 1.1,
+  "rule": "rp=1.1 if >15% of probe outputs hit max_new_tokens with <50% distinct 4-grams, else 1.0"
+}

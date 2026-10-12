@@ -1,0 +1,27 @@
+{
+  "status": "done",
+  "best_checkpoint": "/home/abdullah/ML_Research/Advanced GenAI/PA2/outputs/lora/r16_lr5e-4/trainer/checkpoint-55",
+  "best_metric_eval_loss": 0.0004728107596747577,
+  "final_eval_of_best": {
+    "eval_loss": 0.0004728107596747577,
+    "eval_runtime": 1.2899,
+    "eval_samples_per_second": 15.506,
+    "eval_steps_per_second": 3.876,
+    "eval_rewards/chosen": -2.928062915802002,
+    "eval_rewards/rejected": -13.696609497070312,
+    "eval_rewards/accuracies": 1.0,
+    "eval_rewards/margins": 10.768546104431152,
+    "eval_logps/chosen": -201.41287231445312,
+    "eval_logps/rejected": -255.8767852783203,
+    "eval_logits/chosen": -1.1581172943115234,
+    "eval_logits/rejected": -1.0254364013671875,
+    "epoch": 5.0
+  },
+  "global_steps": 65,
+  "trainable_params": 8683520,
+  "total_params": 370504640,
+  "trainable_fraction": 0.023437007428570935,
+  "effective_batch": 16,
+  "train_rows": 200,
+  "val_rows": 20
+}

@@ -1,0 +1,12 @@
+{
+  "status": "done",
+  "total_steps": 469,
+  "best_step": 400,
+  "best_val_reward_accuracy": 0.728,
+  "best_val_reward_margin": 0.6595803963541984,
+  "train_hours": 1.588,
+  "train_pairs": 15000,
+  "val_pairs": 1000,
+  "effective_batch": 32,
+  "reference_checkpoint": "/home/abdullah/ML_Research/Advanced GenAI/PA2/outputs/sft/best"
+}

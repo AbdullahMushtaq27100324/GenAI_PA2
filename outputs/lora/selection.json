@@ -1,0 +1,4 @@
+{
+  "selected": "r16_lr1e-4",
+  "rule": "max validation reward margin among configs with <=5% degenerate validation generations (checkpoint within each run: min validation DPO loss)"
+}

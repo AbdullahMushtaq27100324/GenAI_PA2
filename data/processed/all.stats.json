@@ -1,0 +1,52 @@
+{
+  "sft": {
+    "source": "HuggingFaceH4/ultrachat_200k (train_sft / test_sft), first user->assistant turn",
+    "pool_train": 207843,
+    "pool_val": 23108,
+    "train": 30000,
+    "val": 1000,
+    "seed": 42
+  },
+  "hh": {
+    "source": "Anthropic/hh-rlhf harmless-base + helpful-base, single-turn only, balanced",
+    "pool_train": {
+      "harmless-base": 12189,
+      "helpful-base": 12784
+    },
+    "pool_val": {
+      "harmless-base": 658,
+      "helpful-base": 694
+    },
+    "train": 15000,
+    "val": 1000,
+    "train_mix": {
+      "harmless-base": 7500,
+      "helpful-base": 7500
+    },
+    "val_mix": {
+      "harmless-base": 500,
+      "helpful-base": 500
+    },
+    "seed": 42
+  },
+  "uf": {
+    "source": "HuggingFaceH4/ultrafeedback_binarized train_prefs / test_prefs, score_chosen > score_rejected",
+    "pool_train": 53344,
+    "pool_val": 1715,
+    "train": 15000,
+    "val": 1000,
+    "seed": 42
+  },
+  "alpaca_eval": {
+    "n": 300,
+    "path": "/home/abdullah/ML_Research/Advanced GenAI/PA2/eval_sets/alpaca_eval_300_seed42.json"
+  },
+  "persona": {
+    "source": "/home/abdullah/ML_Research/Advanced GenAI/PA2/data/persona_lora/ramsay_style_preferences.json",
+    "total": 220,
+    "train": 200,
+    "val": 20,
+    "seed": 42
+  },
+  "persona_eval_overlap_with_train": 0
+}

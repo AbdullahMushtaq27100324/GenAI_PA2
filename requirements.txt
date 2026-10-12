@@ -9,4 +9,7 @@ safetensors
 matplotlib
 peft>=0.11.0
 bitsandbytes>=0.43.0
+trl==0.24.0  # newest TRL that still imports with torch 2.5 (0.25+ needs torch>=2.6 FSDPModule at import)
+pandas
+nbformat
 pytest>=8

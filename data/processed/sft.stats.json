@@ -1,0 +1,8 @@
+{
+  "source": "HuggingFaceH4/ultrachat_200k (train_sft / test_sft), first user->assistant turn",
+  "pool_train": 207843,
+  "pool_val": 23108,
+  "train": 30000,
+  "val": 1000,
+  "seed": 42
+}

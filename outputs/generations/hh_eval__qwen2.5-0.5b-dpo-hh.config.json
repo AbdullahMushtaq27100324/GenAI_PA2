@@ -1,0 +1,12 @@
+{
+  "model_path": "/home/abdullah/ML_Research/Advanced GenAI/PA2/outputs/dpo_hh/best",
+  "adapter_path": null,
+  "generator": "qwen2.5-0.5b-dpo-hh",
+  "max_new_tokens": 512,
+  "batch_size": 16,
+  "do_sample": false,
+  "repetition_penalty": 1.0,
+  "no_repeat_ngram_size": 0,
+  "dtype": "fp16",
+  "prompt_style": "chatml"
+}

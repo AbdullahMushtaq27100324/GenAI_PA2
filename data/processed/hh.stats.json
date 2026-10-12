@@ -1,0 +1,22 @@
+{
+  "source": "Anthropic/hh-rlhf harmless-base + helpful-base, single-turn only, balanced",
+  "pool_train": {
+    "harmless-base": 12189,
+    "helpful-base": 12784
+  },
+  "pool_val": {
+    "harmless-base": 658,
+    "helpful-base": 694
+  },
+  "train": 15000,
+  "val": 1000,
+  "train_mix": {
+    "harmless-base": 7500,
+    "helpful-base": 7500
+  },
+  "val_mix": {
+    "harmless-base": 500,
+    "helpful-base": 500
+  },
+  "seed": 42
+}

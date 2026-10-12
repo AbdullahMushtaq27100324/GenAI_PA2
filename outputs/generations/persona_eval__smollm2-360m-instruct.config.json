@@ -1,0 +1,12 @@
+{
+  "model_path": "HuggingFaceTB/SmolLM2-360M-Instruct",
+  "adapter_path": null,
+  "generator": "smollm2-360m-instruct",
+  "max_new_tokens": 512,
+  "batch_size": 16,
+  "do_sample": false,
+  "repetition_penalty": 1.1,
+  "no_repeat_ngram_size": 0,
+  "dtype": "bf16",
+  "prompt_style": "chat_template"
+}

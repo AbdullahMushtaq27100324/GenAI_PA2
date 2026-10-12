@@ -1,0 +1,33 @@
+{
+  "run_dir": "/home/abdullah/ML_Research/Advanced GenAI/PA2/outputs/lora/r16_lr5e-4",
+  "train_path": "/home/abdullah/ML_Research/Advanced GenAI/PA2/data/processed/persona_train.jsonl",
+  "val_path": "/home/abdullah/ML_Research/Advanced GenAI/PA2/data/processed/persona_val.jsonl",
+  "model_name": "HuggingFaceTB/SmolLM2-360M-Instruct",
+  "max_train": null,
+  "max_val": null,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "target_modules": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "gate_proj",
+    "up_proj",
+    "down_proj"
+  ],
+  "lr": 0.0005,
+  "beta": 0.1,
+  "epochs": 5,
+  "per_device_batch_size": 4,
+  "grad_accum": 4,
+  "warmup_ratio": 0.1,
+  "scheduler": "cosine",
+  "weight_decay": 0.0,
+  "max_grad_norm": 1.0,
+  "max_length": 512,
+  "bf16": true,
+  "eval_steps": 5,
+  "seed": 42
+}

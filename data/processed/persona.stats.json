@@ -1,0 +1,7 @@
+{
+  "source": "/home/abdullah/ML_Research/Advanced GenAI/PA2/data/persona_lora/ramsay_style_preferences.json",
+  "total": 220,
+  "train": 200,
+  "val": 20,
+  "seed": 42
+}

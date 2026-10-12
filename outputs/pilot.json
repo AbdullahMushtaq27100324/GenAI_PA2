@@ -1,0 +1,99 @@
+{
+  "sft": {
+    "micro_batch_size": 4,
+    "optimizer": "adamw8bit",
+    "trials": [
+      {
+        "kind": "sft",
+        "model": "Qwen/Qwen2.5-0.5B",
+        "micro_batch": 4,
+        "optimizer": "adamw8bit",
+        "precision": "fp16",
+        "max_length": 512,
+        "prompt_length": 256,
+        "ref_mode": "online",
+        "ref_dtype": "fp16",
+        "steps": 3,
+        "grad_checkpointing": 1,
+        "ok": true,
+        "optimizer_state_tensors": 1546,
+        "peak_gb": 5.146,
+        "reserved_gb": 5.746,
+        "sec_per_micro": 1.127,
+        "total_gpu_gb": 7.754
+      }
+    ]
+  },
+  "dpo": {
+    "optimizer": "adamw8bit",
+    "ref_mode": "precomputed",
+    "ref_dtype": "fp32",
+    "trials": [
+      {
+        "kind": "dpo",
+        "model": "Qwen/Qwen2.5-0.5B",
+        "micro_batch": 1,
+        "optimizer": "rmsprop",
+        "precision": "fp16",
+        "max_length": 512,
+        "prompt_length": 256,
+        "ref_mode": "online",
+        "ref_dtype": "fp32",
+        "steps": 3,
+        "grad_checkpointing": 1,
+        "ok": false,
+        "error": "OOM: CUDA out of memory. Tried to allocate 18.00 MiB. GPU 0 has a total capacity of 7.75 GiB of which 27.62 MiB is free. Including non-PyTorch memory, this process has 6.87 GiB memory in use. Of the alloca"
+      },
+      {
+        "kind": "dpo",
+        "model": "Qwen/Qwen2.5-0.5B",
+        "micro_batch": 1,
+        "optimizer": "rmsprop",
+        "precision": "fp16",
+        "max_length": 512,
+        "prompt_length": 256,
+        "ref_mode": "online",
+        "ref_dtype": "fp16",
+        "steps": 3,
+        "grad_checkpointing": 1,
+        "ok": false,
+        "error": "OOM: CUDA out of memory. Tried to allocate 520.00 MiB. GPU 0 has a total capacity of 7.75 GiB of which 187.12 MiB is free. Including non-PyTorch memory, this process has 6.63 GiB memory in use. Of the allo"
+      },
+      {
+        "kind": "dpo",
+        "model": "Qwen/Qwen2.5-0.5B",
+        "micro_batch": 1,
+        "optimizer": "rmsprop",
+        "precision": "fp16",
+        "max_length": 512,
+        "prompt_length": 256,
+        "ref_mode": "precomputed",
+        "ref_dtype": "fp32",
+        "steps": 3,
+        "grad_checkpointing": 1,
+        "ok": false,
+        "error": "OOM: CUDA out of memory. Tried to allocate 18.00 MiB. GPU 0 has a total capacity of 7.75 GiB of which 34.50 MiB is free. Including non-PyTorch memory, this process has 6.87 GiB memory in use. Of the alloca"
+      },
+      {
+        "kind": "dpo",
+        "model": "Qwen/Qwen2.5-0.5B",
+        "micro_batch": 1,
+        "optimizer": "adamw8bit",
+        "precision": "fp16",
+        "max_length": 512,
+        "prompt_length": 256,
+        "ref_mode": "precomputed",
+        "ref_dtype": "fp32",
+        "steps": 3,
+        "grad_checkpointing": 1,
+        "ok": true,
+        "optimizer_state_tensors": 1546,
+        "peak_gb": 5.142,
+        "reserved_gb": 5.314,
+        "sec_per_micro": 0.619,
+        "total_gpu_gb": 7.754
+      }
+    ]
+  },
+  "gpu": "NVIDIA GeForce RTX 3050"
+}
