@@ -31,7 +31,7 @@ Everything is written under `/kaggle/working`. Save a notebook version when it f
 code(r"""
 RUN_PART_A_SETUP = True      # Task 1 (needs GPU T4 x2)
 RUN_PART_B_JUDGING = True    # Task 7 (needs Kaggle model access)
-REPO_URL = "https://github.com/<your-username>/<your-repo>.git"   # <-- set this
+REPO_URL = "https://github.com/AbdullahMushtaq27100324/GenAI_PA2.git"
 # Private repo: add a GitHub token (read-only "Contents" access to this repo) as a Kaggle secret named
 # GITHUB_TOKEN via Add-ons -> Secrets. It is read at runtime and never written into the notebook.
 JUDGE_MODEL = "google/gemini-3.6-flash"
