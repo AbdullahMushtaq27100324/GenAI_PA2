@@ -1,0 +1,127 @@
+{
+  "winner": {
+    "treatment": "qwen2.5-0.5b-dpo-uf",
+    "baseline": "qwen2.5-0.5b-sft",
+    "criterion": "winner",
+    "judge_model": "google/gemini-3.6-flash",
+    "overall": {
+      "n_pairs": 300,
+      "wins": 103,
+      "losses": 123,
+      "ties": 73,
+      "unknown": 1,
+      "failures": 0,
+      "pending": 0,
+      "win_rate_excl_ties": 0.4557522123893805,
+      "win_rate_excl_ties_ci95": [
+        0.3920995952137125,
+        0.520883955196657
+      ],
+      "win_rate_ties_half": 0.4665551839464883,
+      "win_share_all": 0.3433333333333333,
+      "tie_rate": 0.24333333333333335,
+      "unknown_rate": 0.0033333333333333335,
+      "failure_rate": 0.0
+    },
+    "per_category": {
+      "helpful_base": {
+        "n_pairs": 51,
+        "wins": 12,
+        "losses": 22,
+        "ties": 17,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.35294117647058826,
+        "win_rate_excl_ties_ci95": [
+          0.21487714895296073,
+          0.5208634116998658
+        ],
+        "win_rate_ties_half": 0.4019607843137255,
+        "win_share_all": 0.23529411764705882,
+        "tie_rate": 0.3333333333333333,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "koala": {
+        "n_pairs": 60,
+        "wins": 18,
+        "losses": 27,
+        "ties": 15,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.4,
+        "win_rate_excl_ties_ci95": [
+          0.27024679447957545,
+          0.5454840579085527
+        ],
+        "win_rate_ties_half": 0.425,
+        "win_share_all": 0.3,
+        "tie_rate": 0.25,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "oasst": {
+        "n_pairs": 54,
+        "wins": 25,
+        "losses": 19,
+        "ties": 9,
+        "unknown": 1,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.5681818181818182,
+        "win_rate_excl_ties_ci95": [
+          0.42223890740554393,
+          0.7031749583514542
+        ],
+        "win_rate_ties_half": 0.5566037735849056,
+        "win_share_all": 0.46296296296296297,
+        "tie_rate": 0.16666666666666666,
+        "unknown_rate": 0.018518518518518517,
+        "failure_rate": 0.0
+      },
+      "selfinstruct": {
+        "n_pairs": 95,
+        "wins": 32,
+        "losses": 41,
+        "ties": 22,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.4383561643835616,
+        "win_rate_excl_ties_ci95": [
+          0.3304516589160894,
+          0.5524242832818866
+        ],
+        "win_rate_ties_half": 0.45263157894736844,
+        "win_share_all": 0.3368421052631579,
+        "tie_rate": 0.23157894736842105,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      },
+      "vicuna": {
+        "n_pairs": 40,
+        "wins": 16,
+        "losses": 14,
+        "ties": 10,
+        "unknown": 0,
+        "failures": 0,
+        "pending": 0,
+        "win_rate_excl_ties": 0.5333333333333333,
+        "win_rate_excl_ties_ci95": [
+          0.3614201328152505,
+          0.6976787277587178
+        ],
+        "win_rate_ties_half": 0.525,
+        "win_share_all": 0.4,
+        "tie_rate": 0.25,
+        "unknown_rate": 0.0,
+        "failure_rate": 0.0
+      }
+    },
+    "attempts_histogram": {
+      "1": 300
+    }
+  }
+}

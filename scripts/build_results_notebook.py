@@ -25,9 +25,9 @@ This notebook only **reads saved results** from `outputs/`; it doesn't train any
 
 | Experiment | Compared on | Result (judge: `google/gemini-3.6-flash`) |
 |---|---|---|
-| **HH-RLHF DPO vs SFT** | 300 helpful/harmless prompts | **DPO wins clearly**: 70% of decided pairs (95% CI 64–75%) |
-| **UltraFeedback DPO vs SFT** | 300 AlpacaEval prompts | **No real difference**: 48% (CI 42–55%). DPO became wordier and lost on long answers |
-| **LoRA persona DPO vs base SmolLM2** | 40 style prompts | **Much more in persona** (95% of decided style judgments) but **less useful** (35% on quality) |
+| **HH-RLHF DPO vs SFT** | 300 helpful/harmless prompts | **DPO wins clearly**: 72% of decided pairs (95% CI 66–77%) |
+| **UltraFeedback DPO vs SFT** | 300 AlpacaEval prompts | **No significant gain; slightly behind**: 46% (CI 39–52%). DPO became wordier and lost on long answers |
+| **LoRA persona DPO vs base SmolLM2** | 40 style prompts | **Much more in persona** (95% of decided style judgments) but **less useful** (39% on quality) |
 
 What we learned, in one line each:
 - **DPO does what the preference data rewards.** HH data rewards safe, deflecting answers, and the model learned exactly that: its biggest wins are on cyber-abuse, privacy and harmful-instruction prompts.
@@ -140,7 +140,7 @@ md(r"""
 **Reading the curves:**
 - **UltraFeedback is easier to learn.** Validation reward accuracy jumps to about 0.70 within 50 steps and plateaus at about 0.72. HH climbs slowly to 0.65 and is still rising at the end, so HH would probably benefit from more training.
 - **The reward margin grows mostly because the rejected answers' likelihood falls** (dotted lines in the bottom-right plot), not because the chosen answers' likelihood rises. This is the typical DPO signature: it pushes probability *away* from bad answers.
-- **The step-0 accuracy is not exactly 0** (0.25 and 0.39) even though the policy equals the reference there. At step 0 the margins are about 1e-6, pure floating-point noise breaking exact ties. Step 0 is never used for checkpoint selection.
+- **Step-0 accuracy is exactly 0**, as the manual predicts: policy and reference are identical, every reward pair ties, and the comparison is strict. A first run logged 0.25/0.39 here because the per-sequence log-prob sum used CUDA atomic adds, whose order varies, so the same model scored slightly differently on each pass. We made the summation deterministic (with a regression test) and re-ran both DPO runs. Final accuracies barely moved (HH 0.646 → 0.647, UltraFeedback 0.728 → 0.726).
 - **Neither validation curve gets worse late in training**, so there's no sign of over-fitting within one epoch.
 """)
 
@@ -155,8 +155,8 @@ display(Markdown((TAB / "generation_stats.md").read_text()))
 """)
 md(r"""
 - **Base → SFT:** the base model often never stops (it hit the token limit on 66% of AlpacaEval prompts). SFT taught it to finish its answer (15%).
-- **SFT → UltraFeedback DPO:** answers get **35% longer** (215 → 291 tokens) and hit the limit more often (15% → 21%). This is UltraFeedback's length preference showing up.
-- **SFT → HH DPO:** answers get **shorter** (183 → 158 tokens). HH-RLHF responses are short overall (about 35 words, against about 200 in UltraFeedback), and DPO moved the model toward that register. Chosen and rejected HH answers are nearly the same length, so this isn't a learned "shorter is preferred" signal.
+- **SFT → UltraFeedback DPO:** answers get **37% longer** (215 → 294 tokens) and hit the limit more often (15% → 20%). This is UltraFeedback's length preference showing up.
+- **SFT → HH DPO:** answers get **shorter** (183 → 160 tokens). HH-RLHF responses are short overall (about 35 words, against about 200 in UltraFeedback), and DPO moved the model toward that register. Chosen and rejected HH answers are nearly the same length, so this isn't a learned "shorter is preferred" signal.
 """)
 
 # =============================================================================
@@ -171,7 +171,7 @@ Each comparison puts the DPO model against SFT on the same prompts with the same
 | HH DPO vs SFT | safety-aware: also rewards appropriate refusals, privacy protection, safe redirection, and penalizes over-refusal |
 | Persona LoRA vs base | two separate verdicts: **style** (how Ramsay-like) and **quality** (helpful, correct, safe, ignoring style) |
 
-All 640 pairs were judged with **0 failures and 0 unparseable verdicts**. One batch of 5 pairs needed a retry.
+All 640 pairs were judged with **0 failed requests and 0 retries**. One UltraFeedback verdict was invalid and is counted as *unknown*. **Judge consistency:** the 40 persona pairs were byte-identical in two separate Kaggle judging runs, and the judge agreed with itself on **95%** of them, for both style and quality.
 """)
 code(r"""
 import sys; sys.path.insert(0, str(ROOT))
@@ -223,9 +223,9 @@ ax.set_xlim(0, 1.05); ax.set_xlabel("HH DPO win rate vs SFT (ties excluded), 30 
 plt.tight_layout(); plt.show()
 """)
 md(r"""
-- **The biggest wins are exactly where HH-RLHF data teaches refusal:** cyber abuse (0.92), privacy/doxxing (0.92), harmful instructions (0.85), legal/financial (0.79), self-harm support (0.70).
-- **Close to a coin flip on benign helpfulness (0.58), calibration (0.52) and medical safety (0.54).** So the safety gain did **not** come at a large cost to normal helpfulness (no obvious "alignment tax"), but it didn't make the model smarter either.
-- **When DPO's answer was shorter than SFT's, DPO won 105 to 24** (section 5c). Short, decisive deflections beat SFT's longer, sometimes complying answers.
+- **The biggest wins are exactly where HH-RLHF data teaches refusal:** harmful instructions (0.96), privacy/doxxing (0.91), cyber abuse (0.88), legal/financial (0.83), self-harm support (0.70).
+- **No alignment tax on benign requests:** DPO also wins on plain helpfulness (0.68), so it didn't become a blanket refuser. Its one weak spot is **calibration and uncertainty (0.42)**, where shorter, more assertive answers lose to SFT's hedged ones. Medical safety is about a coin flip (0.57).
+- **When DPO's answer was shorter than SFT's, DPO won 109 to 21** (section 5c). Short, decisive deflections beat SFT's longer, sometimes complying answers.
 """)
 md(r"""
 ### 5b. UltraFeedback DPO: no measurable gain on AlpacaEval
@@ -239,8 +239,8 @@ tab["win rate (excl. ties)"] = (tab["win"] / (tab["win"] + tab["loss"])).round(3
 display(tab.sort_values("win rate (excl. ties)"))
 """)
 md(r"""
-- **Overall 106 wins, 80 ties, 114 losses.** The 95% interval [0.42, 0.55] contains 0.5, so UltraFeedback DPO is **statistically indistinguishable from SFT** here.
-- **It varies by subset:** better on `oasst` (0.65), worse on `koala` (0.33) and `helpful_base` (0.39). With only 40–95 prompts per subset, these are hints, not conclusions.
+- **Overall 103 wins, 73 ties, 123 losses** (1 unknown). The 95% interval [0.39, 0.52] still contains 0.5, so UltraFeedback DPO is **not significantly different from SFT**; if anything it's slightly behind.
+- **It varies by subset:** around even on `oasst` (0.57) and `vicuna` (0.53), worse on `helpful_base` (0.35) and `koala` (0.40). With only 40–95 prompts per subset, these are hints, not conclusions.
 - **Why no gain, despite the healthy training metrics** (validation reward accuracy 0.73)? The next table points to **length**.
 """)
 md(r"""
@@ -264,8 +264,8 @@ display(Markdown("**Position check** (how often the judge picked the response sh
 display(df.groupby("comparison")["judge picked"].value_counts().unstack(fill_value=0))
 """)
 md(r"""
-- **The judge did *not* simply prefer longer answers.** For UltraFeedback, when DPO's answer was much longer, DPO **lost** 67–90. When it was shorter, it **won** 20–7. So UltraFeedback DPO picked up the dataset's length preference (chosen answers are longer in UltraFeedback), and the judge penalized the padding and the truncated rambles.
-- **There's a mild position bias toward Response A** (UltraFeedback: 126 A vs 94 B; HH: 145 vs 110). Randomizing the A/B order per pair spreads this bias evenly across both models, so it doesn't favour either.
+- **The judge did *not* simply prefer longer answers.** For UltraFeedback, when DPO's answer was much longer, DPO **lost** 64–101. When it was shorter, it **won** 19–6. So UltraFeedback DPO picked up the dataset's length preference (chosen answers are longer in UltraFeedback), and the judge penalized the padding and the truncated rambles.
+- **There's a mild position bias toward Response A** (UltraFeedback: 127 A vs 99 B; HH: 152 vs 113). Randomizing the A/B order per pair spreads this bias evenly across both models, so it doesn't favour either.
 """)
 
 # =============================================================================
@@ -296,7 +296,7 @@ display(out)
 """)
 md(r"""
 - **Style:** the LoRA model is judged more Ramsay-like on 18 prompts, with 21 ties and only 1 loss. The ties are mostly cases where both answers are fairly neutral.
-- **Quality:** it loses 13–24. It is **less useful** on cooking, coding and general help (the persona adds theatrics and sometimes worse advice), and about even on safety-sensitive prompts.
+- **Quality:** it loses 14–22 (4 ties). It is **less useful** on cooking, coding and general help (the persona adds theatrics and sometimes worse advice); see the per-category table for safety-sensitive prompts.
 - **Safety:** it isn't safer. Like the base model, it still answers the chloroform prompt. The persona data teaches tone, not refusal.
 - **Answer to the task's question:** yes, LoRA-DPO made the model more stylistically faithful, **but** at a measurable cost to usefulness. With 200 pairs there's no free lunch between style strength and quality; the learning-rate sweep shows the dial.
 """)
@@ -353,7 +353,7 @@ md(r"""
 All memory decisions are backed by measured probes in `outputs/pilot.json`.
 
 ## 9. Limitations
-- **One judge model, one seed, 300 prompts per set.** Confidence intervals are about ±6 points, so small effects (like UltraFeedback's) can't be resolved.
+- **One judge model, one seed, 300 prompts per set.** Confidence intervals are about ±6 points, so small effects (like UltraFeedback's) can't be resolved. The judge also isn't perfectly repeatable: it agreed with itself on 95% of identical persona pairs.
 - **The judge has a mild preference for Response A** (randomized order spreads it evenly) and its own style preferences.
 - **HH DPO was still improving at the end of its single epoch.** More steps or a larger β sweep could change the size of the gain.
 - **The persona evaluation uses only 40 prompts**, and validation selection used 20.

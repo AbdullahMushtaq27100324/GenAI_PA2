@@ -26,20 +26,20 @@
     "per_category": {
       "coding": {
         "n_pairs": 10,
-        "wins": 5,
+        "wins": 6,
         "losses": 0,
-        "ties": 5,
+        "ties": 4,
         "unknown": 0,
         "failures": 0,
         "pending": 0,
         "win_rate_excl_ties": 1.0,
         "win_rate_excl_ties_ci95": [
-          0.5655085052479191,
-          1.0
+          0.6096569663469354,
+          0.9999999999999999
         ],
-        "win_rate_ties_half": 0.75,
-        "win_share_all": 0.5,
-        "tie_rate": 0.5,
+        "win_rate_ties_half": 0.8,
+        "win_share_all": 0.6,
+        "tie_rate": 0.4,
         "unknown_rate": 0.0,
         "failure_rate": 0.0
       },
@@ -83,20 +83,20 @@
       },
       "safety_sensitive": {
         "n_pairs": 10,
-        "wins": 4,
+        "wins": 3,
         "losses": 1,
-        "ties": 5,
+        "ties": 6,
         "unknown": 0,
         "failures": 0,
         "pending": 0,
-        "win_rate_excl_ties": 0.8,
+        "win_rate_excl_ties": 0.75,
         "win_rate_excl_ties_ci95": [
-          0.3755282641185388,
-          0.9637768390302125
+          0.3006360524426366,
+          0.9544139373553637
         ],
-        "win_rate_ties_half": 0.65,
-        "win_share_all": 0.4,
-        "tie_rate": 0.5,
+        "win_rate_ties_half": 0.6,
+        "win_share_all": 0.3,
+        "tie_rate": 0.6,
         "unknown_rate": 0.0,
         "failure_rate": 0.0
       }
@@ -112,20 +112,20 @@
     "judge_model": "google/gemini-3.6-flash",
     "overall": {
       "n_pairs": 40,
-      "wins": 13,
-      "losses": 24,
-      "ties": 3,
+      "wins": 14,
+      "losses": 22,
+      "ties": 4,
       "unknown": 0,
       "failures": 0,
       "pending": 0,
-      "win_rate_excl_ties": 0.35135135135135137,
+      "win_rate_excl_ties": 0.3888888888888889,
       "win_rate_excl_ties_ci95": [
-        0.2182540663110087,
-        0.5124127048243043
+        0.24784655417822943,
+        0.5513582970325652
       ],
-      "win_rate_ties_half": 0.3625,
-      "win_share_all": 0.325,
-      "tie_rate": 0.075,
+      "win_rate_ties_half": 0.4,
+      "win_share_all": 0.35,
+      "tie_rate": 0.1,
       "unknown_rate": 0.0,
       "failure_rate": 0.0
     },
@@ -133,37 +133,37 @@
       "coding": {
         "n_pairs": 10,
         "wins": 3,
-        "losses": 6,
-        "ties": 1,
+        "losses": 5,
+        "ties": 2,
         "unknown": 0,
         "failures": 0,
         "pending": 0,
-        "win_rate_excl_ties": 0.3333333333333333,
+        "win_rate_excl_ties": 0.375,
         "win_rate_excl_ties_ci95": [
-          0.12058159868274293,
-          0.6458026525009102
+          0.13684175946152105,
+          0.6942621454161981
         ],
-        "win_rate_ties_half": 0.35,
+        "win_rate_ties_half": 0.4,
         "win_share_all": 0.3,
-        "tie_rate": 0.1,
+        "tie_rate": 0.2,
         "unknown_rate": 0.0,
         "failure_rate": 0.0
       },
       "cooking": {
         "n_pairs": 10,
-        "wins": 2,
-        "losses": 8,
+        "wins": 3,
+        "losses": 7,
         "ties": 0,
         "unknown": 0,
         "failures": 0,
         "pending": 0,
-        "win_rate_excl_ties": 0.2,
+        "win_rate_excl_ties": 0.3,
         "win_rate_excl_ties_ci95": [
-          0.056680947980693314,
-          0.5098431532792765
+          0.10778928748621183,
+          0.6032267800204347
         ],
-        "win_rate_ties_half": 0.2,
-        "win_share_all": 0.2,
+        "win_rate_ties_half": 0.3,
+        "win_share_all": 0.3,
         "tie_rate": 0.0,
         "unknown_rate": 0.0,
         "failure_rate": 0.0
