@@ -104,16 +104,17 @@ def plot_dpo(runs: dict[str, str], out_path, beta=0.1):
             if best is not None:
                 ax.axvline(best, color=c, linestyle="--", linewidth=1)
     ax_loss.axhline(0.6931, color=INK2, linewidth=0.8, linestyle=":", label="log 2 (no preference)")
-    ax_loss.set(xlabel="optimizer step", ylabel="DPO loss", title="DPO loss")
+    ax_loss.set(xlabel="optimizer step", ylabel="DPO loss", title="(a) DPO loss")
     ax_acc.axhline(0.5, color=INK2, linewidth=0.8, linestyle=":")
     ax_acc.set(xlabel="optimizer step", ylabel="fraction r_w > r_l",
-               title="Validation reward accuracy (dashed = best ckpt)")
+               title="(b) Validation reward accuracy (dashed = best ckpt)")
     ax_margin.axhline(0, color=INK2, linewidth=0.8, linestyle=":")
-    ax_margin.set(xlabel="optimizer step", ylabel="mean r_w - r_l", title=f"Validation reward margin (beta={beta})")
+    ax_margin.set(xlabel="optimizer step", ylabel="mean r_w - r_l", title=f"(c) Validation reward margin (beta={beta})")
     ax_rew.axhline(0, color=INK2, linewidth=0.8, linestyle=":")
-    ax_rew.set(xlabel="optimizer step", ylabel="beta * (log pi - log ref)", title="Validation implicit rewards")
-    for ax in axes.flat:
-        ax.legend()
+    ax_rew.set(xlabel="optimizer step", ylabel="beta * (log pi - log ref)", title="(d) Validation implicit rewards")
+    ax_loss.legend(loc="lower left", fontsize=6.5, frameon=True, framealpha=0.85, edgecolor="none")
+    for ax in (ax_acc, ax_margin, ax_rew):
+        ax.legend(fontsize=7)
     return _save(fig, out_path)
 
 

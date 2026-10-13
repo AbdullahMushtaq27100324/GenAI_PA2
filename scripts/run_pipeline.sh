@@ -5,7 +5,7 @@
 # Re-running after a crash resumes: finished stages are skipped, training resumes from <run>/last/.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-source ~/ML_Research/.venv/bin/activate
+source .venv/bin/activate
 MODE="${1:-dry}"
 case "$MODE" in
   dry) DRY=True ;;
@@ -16,7 +16,7 @@ mkdir -p logs
 TS="$(date +%Y%m%d_%H%M%S)"
 LOG="logs/run_${MODE}_${TS}.log"
 nohup papermill notebooks/PA2_local_pipeline.ipynb "logs/executed_${MODE}_${TS}.ipynb" \
-  -k ml -p DRY_RUN "$DRY" --log-output --request-save-on-cell-execute > "$LOG" 2>&1 &
+  -k python3 -p DRY_RUN "$DRY" --log-output --request-save-on-cell-execute > "$LOG" 2>&1 &
 echo "started PID $! (mode=$MODE)"
 echo "follow progress:  tail -f $LOG"
 echo "executed notebook (saved after every cell): logs/executed_${MODE}_${TS}.ipynb"

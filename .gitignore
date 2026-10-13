@@ -21,3 +21,4 @@ outputs*/**/trainer/
 # LoRA adapters: keep only the submitted one (outputs/lora/selection.json)
 outputs*/**/best_adapter/
 !outputs/lora/r16_lr1e-4/best_adapter/
+PA2.pdf
