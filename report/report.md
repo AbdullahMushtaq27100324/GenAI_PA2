@@ -53,6 +53,7 @@ Table: **Table 2.** Values actually used for the submitted checkpoints. Seed 42 
 - **Qwen models** (base, SFT, both DPO models): repetition penalty 1.0, ChatML template above, fp16.
 - **SmolLM2 pair:** repetition penalty 1.1, SmolLM2 chat template, bf16.
 - Each comparison uses identical settings for both models. The repetition rule was fixed before any comparison was generated (§3).
+- **Sanity check (§12):** before each full generation run, 2–5 prompts per model were generated and inspected for checkpoint path, tokenizer, template, EOS behaviour and length (printed in the pipeline notebook).
 
 # 3  Parameter choices and deviations
 
@@ -63,20 +64,26 @@ Table: **Table 3.** Resource-driven deviations from the guide configuration.
 | Item | Guide value | Final value | Evidence / reason |
 |:--------------|:----------------|:------------------|:---------------------------------------------------|
 | Hardware | Kaggle 2× T4 (15 GB each) | 1× RTX 3050 (8 GB) | Runs unattended locally; Kaggle only for Task 1 and judging |
-| SFT optimizer | AdamW | 8-bit AdamW (bitsandbytes) [8] | fp32 weights + gradients + fp32 Adam states ≈ 8 GB before activations; 8-bit AdamW at micro-batch 4: 5.7 GB in the probe (6.3 GB observed in training, including evaluation) |
+| SFT optimizer | not specified | 8-bit AdamW (bitsandbytes) [8] | fp32 weights + gradients + fp32 Adam states ≈ 8 GB before activations; 8-bit AdamW at micro-batch 4: 5.7 GB in the probe (6.3 GB observed in training, including evaluation) |
 | SFT micro-batch × accumulation | 2 × 16 | 4 × 8 (effective 32 unchanged) | Fits (5.7 GB), 1.13 s per 4×512-token micro-batch |
 | DPO optimizer | RMSprop or AdamW | 8-bit AdamW | RMSprop ran out of memory in all three probed setups (online fp32 reference, online fp16, pre-computed); 8-bit AdamW with pre-computed reference: 5.3 GB |
 | DPO reference | Frozen SFT copy run every step (fp16, cuda:1) | Frozen fp32 SFT copy scores all 16k pairs once before training, then is freed | Mathematically identical (frozen, eval mode); fp32 gives the reference exactly the policy's numerics at step 0 |
 | Activation memory | – | Gradient checkpointing; LM head applied only at response positions, in chunks | Avoids a [B, T, 151,936] logits tensor; verified equal to the full-logits path by unit tests |
 
+**Effect of the resource-driven changes.** We expect none of them to materially affect results, though we couldn't measure that directly, because the unchanged setups don't fit in 8 GB:
+
+- The pre-computed reference, gradient checkpointing and chunked LM head are exact; they compute the same quantities.
+- The micro-batch change keeps the effective batch at 32.
+- 8-bit AdamW is reported to match 32-bit Adam [8]. Our SFT and DPO curves are smooth, and DPO reaches the expected reward-accuracy range (Fig. 2).
+
 **Performance-driven choices.**
 
-1. **Persona LoRA configuration and selection.** Table 4 shows the sweep. With 20 validation pairs, reward accuracy saturates at 1.0 for every run, so it cannot select anything. Validation DPO loss keeps falling as the learning rate rises, and the lowest-loss adapters (LR ≥ 2e-4) produce looping, abusive text, a clear case of over-optimization. So each adapter generates for the 20 *validation* prompts, and we pick the **largest validation margin among adapters with at most 5% degenerate generations** (degenerate = hits the token limit with fewer than 50% distinct 4-grams). This selects r = 16, LR 1e-4 (its checkpoint at step 60 has the lowest validation loss within the run). Justification for the remaining settings:
+1. **Persona LoRA configuration and selection.** Table 4 shows the sweep. With 20 validation pairs, reward accuracy saturates at 1.0 for every run, so it cannot select anything. Validation DPO loss keeps falling as the learning rate rises, and the lowest-loss adapters (LR ≥ 2e-4) produce looping, abusive text, a clear case of over-optimization. So each adapter generates for the 20 *validation* prompts, and we pick the **largest validation margin among adapters with at most 5% degenerate generations** (degenerate = hits the token limit with fewer than 50% distinct 4-grams). This selects r = 16, LR 1e-4 (its checkpoint at step 60 has the lowest validation loss within the run). *Effect:* 0% degenerate validation outputs, against 95–100% for the lowest-loss adapters. Justification for the remaining settings:
    - **Rank 16 with α = 2r:** rank 8 already degenerates at 2e-4, and rank 32 doubles the parameters without a quality benefit.
    - **All attention and MLP projections:** style spans both.
    - **Batch 16 and 5 epochs** (65 steps): validation loss plateaus by about step 50.
    - **β = 0.1**, matching the from-scratch runs.
-2. **SmolLM2 repetition penalty 1.1.** By the pre-registered rule (switch on a penalty if more than 15% of probe outputs loop), base SmolLM2 looped on 25% of probe prompts, so the persona pair uses 1.1. The Qwen SFT model looped on 4%, so Qwen keeps 1.0.
+2. **SmolLM2 repetition penalty 1.1.** By the pre-registered rule (switch on a penalty if more than 15% of probe outputs loop), base SmolLM2 looped on 25% of probe prompts, so the persona pair uses 1.1. The Qwen SFT model looped on 4%, so Qwen keeps 1.0. *Effect:* with 1.1, base SmolLM2 reaches the token limit on only 1 of its 40 persona-eval outputs, and the setting is identical for both persona models.
 3. **No change to the DPO recipe.** β = 0.1, LR 1e-6 fixed, effective batch 32 and one epoch are the guide values.
 
 Table: **Table 4.** Persona LoRA sweep (β = 0.1, 5 epochs). "Degenerate", "!/output" and "words" are measured on the 20 validation prompts; the base model gets 0%, 0.45 and 82.
